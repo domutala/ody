@@ -22,14 +22,15 @@ jobs:
       - run: pnpm install
         working-directory: ./docs
 
-      # ⚠️ Si tu n'as PAS besoin de build (dossier docs statique), supprime cette ligne
-      # - run: pnpm build
+      - name: Build
+        run: pnpm build
+        working-directory: ./docs
 
       # Upload du dossier docs comme artefact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs # <-- changement ici
+          path: ./docs/dist
 
   deploy:
     needs: build
