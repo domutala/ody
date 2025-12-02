@@ -1,27 +1,21 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxt/eslint", "@nuxt/ui"],
+  extends: ["docus"],
 
-  components: [{ path: "~/components", global: true, prefix: "o" }],
+  modules: ["@nuxtjs/i18n"],
 
-  devtools: {
-    enabled: true,
-  },
+  css: ["~/assets/styles/main.css"],
 
-  css: ["~/assets/css/main.css"],
-
-  routeRules: {
-    "/": { prerender: true },
-  },
-
-  compatibilityDate: "2025-01-15",
-
-  eslint: {
-    config: {
-      stylistic: {
-        commaDangle: "never",
-        braceStyle: "1tbs",
+  i18n: {
+    defaultLocale: "en",
+    locales: [
+      {
+        code: "en",
+        name: "English",
       },
-    },
+      {
+        code: "fr",
+        name: "Français",
+      },
+    ],
   },
 });
