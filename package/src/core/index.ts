@@ -1,4 +1,4 @@
-import validators from "packages/validators";
+import validators from "src/validators";
 
 /**
  * Represents a single unit of work in the internal pipeline.

@@ -1,4 +1,4 @@
-import { StringSchema } from "packages/schemas/string";
+import { StringSchema } from "src/schemas/string";
 
 export const $ody = {
   string: () => new StringSchema(),

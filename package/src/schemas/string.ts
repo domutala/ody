@@ -1,4 +1,4 @@
-import { BaseSchema } from "packages/core";
+import { BaseSchema } from "src/core";
 
 /**
  * Public contract for StringSchema.
