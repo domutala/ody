@@ -6,7 +6,7 @@
  * - no side effects
  * - strictly typed logic
  */
-export const BooleanValidators = {
+export default {
   // ---------------------------------------------------------------------------
   // Basic type checks
   // ---------------------------------------------------------------------------

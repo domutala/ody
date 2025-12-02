@@ -6,7 +6,7 @@
  * - no side effects
  * - strictly typed logic
  */
-export const ValueValidators = {
+const validators = {
   // ---------------------------------------------------------------------------
   // Type checks
   // ---------------------------------------------------------------------------
@@ -84,7 +84,7 @@ export const ValueValidators = {
    * Returns true if the value is not empty.
    */
   notEmpty(value: unknown): boolean {
-    return !ValueValidators.empty(value);
+    return !validators.empty(value);
   },
 
   /**
@@ -102,3 +102,5 @@ export const ValueValidators = {
     return !!value;
   },
 };
+
+export default validators;

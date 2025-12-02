@@ -8,7 +8,7 @@
  *
  * Designed for framework-level usage: predictable, consistent and safe.
  */
-export const NumberValidators = {
+export default {
   // ---------------------------------------------------------------------------
   // Basic type checks
   // ---------------------------------------------------------------------------
@@ -163,19 +163,11 @@ export const NumberValidators = {
     return value >= threshold;
   },
 
-  min(value: number, threshold: number): boolean {
-    return value >= threshold;
-  },
-
   lt(value: number, threshold: number): boolean {
     return value < threshold;
   },
 
   lte(value: number, threshold: number): boolean {
-    return value <= threshold;
-  },
-
-  max(value: number, threshold: number): boolean {
     return value <= threshold;
   },
 

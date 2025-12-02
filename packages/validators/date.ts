@@ -6,7 +6,7 @@
  * - no side effects
  * - relies on native Date object for validity
  */
-export const DateValidators = {
+export default {
   // ---------------------------------------------------------------------------
   // Basic checks
   // ---------------------------------------------------------------------------

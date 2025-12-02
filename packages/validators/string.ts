@@ -6,7 +6,7 @@
  * - no side effects
  * - strictly pattern-based or parser-based validation
  */
-export const StringValidators = {
+export default {
   // ---------------------------------------------------------------------------
   // Basic checks
   // ---------------------------------------------------------------------------
@@ -16,13 +16,6 @@ export const StringValidators = {
    */
   string(value: unknown): value is string {
     return typeof value === "string";
-  },
-
-  /**
-   * Returns true if the string is not empty.
-   */
-  nonEmpty(value: string): boolean {
-    return typeof value === "string" && value.length > 0;
   },
 
   /**
@@ -287,7 +280,7 @@ export const StringValidators = {
   /**
    * Returns true if the string matches the given regular expression.
    */
-  pattern(value: unknown, regex: RegExp): boolean {
+  regex(value: unknown, regex: RegExp): boolean {
     return typeof value === "string" && regex.test(value);
   },
 
