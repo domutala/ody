@@ -20,6 +20,7 @@ jobs:
 
       # Installation
       - run: pnpm install
+        working-directory: ./docs
 
       # ⚠️ Si tu n'as PAS besoin de build (dossier docs statique), supprime cette ligne
       # - run: pnpm build
