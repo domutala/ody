@@ -13,7 +13,7 @@ Strongly typed, ultra-fast validator using a sequential immutable pipeline.
   ---
   color: neutral
   size: xl
-  to: /en/getting-started/installation
+  to: /en/getting-started/introduction
   class: rounded-full
   trailing-icon: i-lucide-chevron-right
   ui: { trailingIcon: 'size-4' }

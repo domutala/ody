@@ -3,8 +3,6 @@ export default defineNuxtConfig({
 
   modules: ["@nuxtjs/i18n"],
 
-  ssr: false,
-
   css: ["~/assets/styles/main.css"],
 
   i18n: {
@@ -14,14 +12,6 @@ export default defineNuxtConfig({
         code: "en",
         name: "English",
       },
-      {
-        code: "fr",
-        name: "Français",
-      },
     ],
-  },
-
-  nitro: {
-    preset: "github_pages",
   },
 });
