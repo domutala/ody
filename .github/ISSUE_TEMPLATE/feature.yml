@@ -1,24 +1,24 @@
 name: "Feature Request"
-description: "Proposer une feature pour Ody"
+description: "Propose a new feature for Ody"
 labels: ["feature"]
 body:
   - type: input
     id: summary
     attributes:
-      label: Résumé
-      placeholder: "Ex: Ajouter object() avec inférence"
+      label: Summary
+      placeholder: "Ex: Add object() with full TypeScript inference"
   - type: textarea
     id: description
     attributes:
-      label: Description détaillée
-      placeholder: Explique le comportement attendu, l'API, les contraintes...
+      label: Detailed Description
+      placeholder: "Explain the expected behavior, API design, and constraints..."
       render: markdown
   - type: textarea
     id: api
     attributes:
-      label: Proposition API
+      label: API Proposal
       placeholder: |
-        Exemple :
+        Example:
         ```ts
         const user = ody.object({
           name: ody.string(),
@@ -29,16 +29,16 @@ body:
   - type: dropdown
     id: priority
     attributes:
-      label: Priorité
+      label: Priority
       options:
         - High
         - Medium
         - Low
   - type: checkboxes
-    id: check
+    id: checklist
     attributes:
       label: Checklist
       options:
-        - label: Tests prévus
-        - label: Documentation prévue
-        - label: Impact DX réfléchi
+        - label: Tests planned
+        - label: Documentation planned
+        - label: DX impact considered

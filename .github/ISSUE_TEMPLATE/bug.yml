@@ -1,21 +1,21 @@
 name: "Bug Report"
-description: "Signaler un bug dans Ody"
+description: "Report a bug in Ody"
 labels: ["bug"]
 body:
   - type: textarea
     id: summary
     attributes:
-      label: Résumé du problème
-      placeholder: "Décris le bug"
+      label: Bug Summary
+      placeholder: "Describe the bug"
   - type: textarea
     id: steps
     attributes:
-      label: Étapes pour reproduire
-      placeholder: "1. Importer ody...\n2. ..."
+      label: Steps to Reproduce
+      placeholder: "1. Import ody...\n2. ..."
   - type: textarea
     id: code
     attributes:
-      label: Code d'exemple
+      label: Example Code
       render: typescript
       placeholder: |
         ```ts
@@ -24,13 +24,13 @@ body:
   - type: textarea
     id: expected
     attributes:
-      label: Résultat attendu
+      label: Expected Result
   - type: textarea
     id: actual
     attributes:
-      label: Résultat obtenu
+      label: Actual Result
   - type: textarea
     id: env
     attributes:
-      label: Environnement
+      label: Environment
       placeholder: "Node version, TS version, OS…"
