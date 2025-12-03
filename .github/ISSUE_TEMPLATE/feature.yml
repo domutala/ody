@@ -1,0 +1,44 @@
+name: "Feature Request"
+description: "Proposer une feature pour Ody"
+labels: ["feature"]
+body:
+  - type: input
+    id: summary
+    attributes:
+      label: Résumé
+      placeholder: "Ex: Ajouter object() avec inférence"
+  - type: textarea
+    id: description
+    attributes:
+      label: Description détaillée
+      placeholder: Explique le comportement attendu, l'API, les contraintes...
+      render: markdown
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposition API
+      placeholder: |
+        Exemple :
+        ```ts
+        const user = ody.object({
+          name: ody.string(),
+          age: ody.number().min(18),
+        });
+        ```
+      render: markdown
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priorité
+      options:
+        - High
+        - Medium
+        - Low
+  - type: checkboxes
+    id: check
+    attributes:
+      label: Checklist
+      options:
+        - label: Tests prévus
+        - label: Documentation prévue
+        - label: Impact DX réfléchi

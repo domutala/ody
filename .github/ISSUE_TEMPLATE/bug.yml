@@ -1,0 +1,36 @@
+name: "Bug Report"
+description: "Signaler un bug dans Ody"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Résumé du problème
+      placeholder: "Décris le bug"
+  - type: textarea
+    id: steps
+    attributes:
+      label: Étapes pour reproduire
+      placeholder: "1. Importer ody...\n2. ..."
+  - type: textarea
+    id: code
+    attributes:
+      label: Code d'exemple
+      render: typescript
+      placeholder: |
+        ```ts
+        ody.string().parse(123);
+        ```
+  - type: textarea
+    id: expected
+    attributes:
+      label: Résultat attendu
+  - type: textarea
+    id: actual
+    attributes:
+      label: Résultat obtenu
+  - type: textarea
+    id: env
+    attributes:
+      label: Environnement
+      placeholder: "Node version, TS version, OS…"
