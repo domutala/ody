@@ -8,10 +8,11 @@ const name = $ody
   .string()
   .min(5)
   .max(50)
-  .regex(/^[a-zA-Z]+$/, "reges not match");
+  .array()
+  .regex(/^[a-zA-Z]+$/, "regex not match");
 
 try {
-  console.log(name.parse("Hellooo   "));
+  console.log(name.parse(["dfsdfsdf"]));
 } catch (error) {
   console.log("eroooooor", error);
 }

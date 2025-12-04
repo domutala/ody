@@ -1,4 +1,4 @@
-import { BaseSchema } from "src/core";
+import { _Basechema, BaseSchema } from "src/core";
 
 /**
  * Public contract for StringSchema.
@@ -10,7 +10,7 @@ import { BaseSchema } from "src/core";
  * Each method returns `this` to allow fluent API chaining,
  * which is common in validation libraries.
  */
-interface _StringSchema extends BaseSchema<string> {
+export interface _StringSchema extends _Basechema<string> {
   // ---------------------------------------------------------------------------
   // VALIDATIONS — Rules that do not modify the value.
   // Each validator stores its parameters in `params.args`
@@ -131,7 +131,7 @@ export class StringSchema extends BaseSchema<string> implements _StringSchema {
      * This is essential as a type guard, preventing undefined
      * behavior later in the pipeline.
      */
-    super([{ schema: "string", type: "validator", params: {} }]);
+    super("string", [{ schema: "string", type: "validator", params: {} }]);
   }
 
   regex(regex: RegExp, params?: string) {
