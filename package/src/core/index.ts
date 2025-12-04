@@ -1,148 +1,85 @@
 import validators from "src/validators";
 
 /**
- * Represents a single unit of work in the internal pipeline.
- *
- * Each node corresponds to either:
- *  - a validator  (never modifies the value)
- *  - a transformer (modifies the value before subsequent validations)
- *
- * The pipeline is strictly sequential and deterministic.
- *
- * Fields:
- * - schema: internal identifier of the validator/transformer (key in the registry)
- * - type: routes the rule to the proper engine (validator vs transformer)
- * - optional / nullable: flags to handle permissiveness (not fully used yet)
- * - params: arguments passed to the validator + optional error message
+ * Represents a single rule in the validation/transformation pipeline.
+ * Can be a validator (checks value) or transformer (modifies value).
  */
 export interface SchemaOutput {
   schema: string;
   type: "validator" | "transformer";
-
   params: { args?: any; error?: string };
 }
 
 /**
- * Base type for all schemas.
- * Provides validation, transformation, and common helpers.
+ * Base interface for all schemas.
+ * Provides parsing, validation, transformation, and common helpers.
  */
 export interface _Basechema<T> {
-  /**
-   * Validates and transforms the value.
-   */
   parse(value: any): T;
-
-  /**
-   * Validates without throwing an error.
-   */
   safeParse(value: any): { error?: any; value: T };
-
-  /**
-   * Sets a default value.
-   */
   default(value: any): this;
-
-  /**
-   * Marks the value as optional.
-   */
   optional(): this;
-
-  /**
-   * Allows `null`.
-   */
   nullable(): this;
-
-  /**
-   * Allows `null` or `undefined`.
-   */
   nullish(): this;
-
-  /**
-   * Requires the value to be an array.
-   */
   array(): this;
 }
 
 /**
- * Base class for all schemas.
- *
- * Central responsibilities:
- * - manage the `_output` pipeline
- * - provide the `parse()` method that executes validators & transformers in order
- * - provide common infrastructure for building strongly-typed schemas
- *
- * The goal is to provide a minimal and extensible foundation
- * that specialized types (StringSchema, NumberSchema, ObjectSchema, etc.)
- * can build upon.
+ * Base class for schemas.
+ * Manages the rule pipeline and provides parse methods.
  */
 export class BaseSchema<T = any> implements _Basechema<T> {
   private _optional?: boolean;
   private _nullable?: boolean;
   private _nullish?: boolean;
   private _array: boolean;
-
   private _default: T;
   private _name: string;
-
   _output: SchemaOutput[];
 
   constructor(_name: string, _output: SchemaOutput[]) {
     this._name = _name;
-
-    /**
-     * `_output` is an immutable pipeline of rules.
-     * Each operation (validator/transformer) is an atomic "node"
-     * that executes its behavior independently.
-     */
-    this._output = _output;
+    this._output = _output; // Pipeline of validators/transformers
   }
 
+  /** Marks value as optional. */
   optional() {
     this._optional = true;
     return this;
   }
 
+  /** Sets a default value. */
   default(value: any) {
     this._default = value;
     return this;
   }
 
+  /** Allows null values. */
   nullable() {
     this._nullable = true;
     return this;
   }
 
+  /** Allows null or undefined values. */
   nullish() {
     this._nullish = true;
     return this;
   }
 
+  /** Alias for undefinedable (not implemented). */
   undefinedable() {
     return this;
   }
 
+  /** Marks value as an array of T. */
   array() {
     this._array = true;
     return this;
   }
 
   /**
-   * Central execution function of the schema.
-   *
-   * Execution pipeline:
-   * 1. Iterate sequentially over `_output`.
-   * 2. If the node is a validator:
-   *      - call validators[schemaName](value, args)
-   *      - handle nullable (value is null but allowed)
-   *      - if validation fails → throw params.error
-   * 3. If the node is a transformer:
-   *      - replace the value with the transformed result
-   * 4. Return the final transformed value
-   *
-   * This model is intentionally low-level to allow:
-   *  - strict control over execution order
-   *  - clear separation of validation vs transformation
-   *  - easy extensibility (lazy schemas, async rules, unions, refinements)
+   * Validates and transforms a value according to the pipeline.
+   * Throws on validation errors.
    */
   parse(value?: any) {
     if (typeof value === "undefined") value = this._default;
@@ -161,32 +98,9 @@ export class BaseSchema<T = any> implements _Basechema<T> {
       let value = values[i];
 
       for (const schema of this._output) {
-        // ------------------------------------------------------------
-        // VALIDATION BLOCK
-        // ------------------------------------------------------------
         if (schema.type === "validator") {
-          const error = schema.schema;
-
-          /**
-           * Call the validator from the global registry.
-           * Convention: validator strictly returns a boolean.
-           */
-
-          let is: boolean = validators[schema.schema](
-            value,
-            schema.params.args
-          );
-
-          /**
-           * `accept` allows integrating extra rules like `nullable`
-           * without breaking the main logic.
-           *
-           * This keeps the system extensible for future additions:
-           *   - optional()
-           *   - refine()
-           *   - superRefine()
-           */
-          let accept = is;
+          let isValid = validators[schema.schema](value, schema.params.args);
+          let accept = isValid;
 
           if (schema.schema === this._name) {
             if (!accept) {
@@ -196,42 +110,15 @@ export class BaseSchema<T = any> implements _Basechema<T> {
               ) {
                 accept = true;
               }
-            }
-
-            if (!accept) {
               if ((this._nullable || this._nullish) && value === null) {
                 accept = true;
               }
             }
           }
 
-          /**
-           * If the validator returns false AND the rule is not "accepted"
-           * → throw an error.
-           *
-           * Note: error is a raw string intentionally, allowing higher-level
-           * parsers or formatters to wrap it in rich objects if needed.
-           */
-          if (!is) {
-            if (!accept) {
-              throw schema.params.error || error;
-            }
-
-            // If the rule fails but is accepted → stop pipeline here.
-            // This allows advanced behaviors like "nullable" handling.
-            break;
-          }
-        }
-
-        // ------------------------------------------------------------
-        // TRANSFORMATION BLOCK
-        // ------------------------------------------------------------
-        else {
-          /**
-           * Transformers modify the value and reinject it into the pipeline.
-           *
-           * Examples: trim(), toLowerCase(), normalize(), etc.
-           */
+          if (!isValid && !accept) throw schema.params.error || schema.schema;
+        } else {
+          // Transformer modifies the value
           value = validators[schema.schema](value, schema.params.args);
         }
       }
@@ -239,14 +126,16 @@ export class BaseSchema<T = any> implements _Basechema<T> {
       values[i] = value;
     }
 
-    // Final transformed value
     return value;
   }
 
+  /**
+   * Validates a value and returns result object.
+   * Does not throw on error.
+   */
   safeParse(value?: any) {
     try {
-      this.parse(value);
-      return { value };
+      return { value: this.parse(value) };
     } catch (error) {
       return { error, value };
     }
