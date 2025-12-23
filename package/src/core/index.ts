@@ -21,8 +21,8 @@ export type SchemaOutput =
  * Provides parsing, validation, transformation, and common helpers.
  */
 export interface _Basechema<T> {
-  parse(value: any): T;
-  safeParse(value: any): { error?: any; value: T };
+  parse(value: any): Promise<T>;
+  safeParse(value: any): Promise<{ error?: string; value: T }>;
   default(value: any): this;
   optional(): this;
   nullable(): this;
@@ -93,7 +93,7 @@ export class BaseSchema<T = any> implements _Basechema<T> {
    * Validates and transforms a value according to the pipeline.
    * Throws on validation errors.
    */
-  parse(value?: any) {
+  async parse(value?: any) {
     if (typeof value === "undefined") value = this._default;
 
     if (this._nullish) {
@@ -132,7 +132,7 @@ export class BaseSchema<T = any> implements _Basechema<T> {
           if (!isValid && !accept) throw schema.params.error || schema.schema;
         } else {
           // Transformer modifies the value
-          value = validators[schema.schema](value, schema.params.args);
+          value = await validators[schema.schema](value, schema.params.args);
         }
       }
 
@@ -146,9 +146,9 @@ export class BaseSchema<T = any> implements _Basechema<T> {
    * Validates a value and returns result object.
    * Does not throw on error.
    */
-  safeParse(value?: any) {
+  async safeParse(value?: any) {
     try {
-      return { value: this.parse(value) };
+      return { value: await this.parse(value) };
     } catch (error) {
       return { error, value };
     }

@@ -11,7 +11,7 @@ export default {
   ...StringValidators,
   ...ValueValidators,
 
-  transformer: (value: any, fn: (value: any) => any) => {
-    return fn(value);
+  transformer: async (value: any, fn: (value: any) => any | Promise<any>) => {
+    return await fn(value);
   },
 };
