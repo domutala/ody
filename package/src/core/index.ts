@@ -4,11 +4,17 @@ import validators from "src/validators";
  * Represents a single rule in the validation/transformation pipeline.
  * Can be a validator (checks value) or transformer (modifies value).
  */
-export interface SchemaOutput {
-  schema: string;
-  type: "validator" | "transformer";
-  params: { args?: any; error?: string };
-}
+export type SchemaOutput =
+  | {
+      schema: string;
+      type: "validator";
+      params: { args?: any; error?: string };
+    }
+  | {
+      schema: string;
+      type: "transformer";
+      params: { args?: any };
+    };
 
 /**
  * Base interface for all schemas.
@@ -34,6 +40,7 @@ export class BaseSchema<T = any> implements _Basechema<T> {
   private _nullish?: boolean;
   private _array: boolean;
   private _default: T;
+
   private _name: string;
   _output: SchemaOutput[];
 
@@ -66,14 +73,19 @@ export class BaseSchema<T = any> implements _Basechema<T> {
     return this;
   }
 
-  /** Alias for undefinedable (not implemented). */
-  undefinedable() {
-    return this;
-  }
-
   /** Marks value as an array of T. */
   array() {
     this._array = true;
+    return this;
+  }
+
+  transform(fn: (value: T) => T) {
+    this._output.push({
+      schema: "transformer",
+      type: "transformer",
+      params: { args: fn },
+    });
+
     return this;
   }
 
@@ -110,6 +122,7 @@ export class BaseSchema<T = any> implements _Basechema<T> {
               ) {
                 accept = true;
               }
+
               if ((this._nullable || this._nullish) && value === null) {
                 accept = true;
               }

@@ -10,4 +10,8 @@ export default {
   ...BooleanValidators,
   ...StringValidators,
   ...ValueValidators,
+
+  transformer: (value: any, fn: (value: any) => any) => {
+    return fn(value);
+  },
 };

@@ -9,6 +9,9 @@ const name = $ody
   .min(5)
   .max(50)
   .array()
+  .transform((value) => {
+    return value + "ZZZ";
+  })
   .regex(/^[a-zA-Z]+$/, "regex not match");
 
 try {
