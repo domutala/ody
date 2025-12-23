@@ -14,8 +14,11 @@ const name = $ody
   })
   .regex(/^[a-zA-Z]+$/, "regex not match");
 
-try {
-  console.log(name.parse(["dfsdfsdf"]));
-} catch (error) {
-  console.log("eroooooor", error);
-}
+name
+  .parse(["dfsdfsdf"])
+  .then((value) => {
+    console.log(value);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
