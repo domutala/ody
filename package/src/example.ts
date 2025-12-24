@@ -1,38 +1,15 @@
-import { StringSchema } from "src/schemas/string";
-import { Infer } from "./types/infer";
+import * as ody from ".";
 
-export const $ody = {
-  string: () => new StringSchema(),
-};
-
-const name = $ody
-  .string()
-  .optional()
-  .nullish()
-  .array()
-  .default(["sdfsdf", "dfsdf"])
-  .transform((v) => (v ? v.length : 0));
-
-// .default(125);
-// .array();
-
-// .array()
-// .trim()
-// .transform((value) => {
-//   return value + "ZZZ";
-// })
-// .min(5)
-// .max(50)
-
-// .regex(/^[a-zA-Z]+$/, "regex not match");
-
-type Result = Infer<typeof name>;
+const name = ody.string().min(2).max(16).array().optional();
 
 name
-  .parse(["  dfsdfsdf    ", "fr4585"])
-  .then((value) => {
-    console.log(value);
+  .parse(["ert.com"])
+  .then((v) => {
+    console.log(v);
   })
   .catch((error) => {
-    console.log(error);
+    console.log("error", error);
   });
+
+type Reseult = ody.InferOutput<typeof name>;
+type In = ody.InferInput<typeof name>;

@@ -4,7 +4,11 @@ import NumberValidators from "./number";
 import StringValidators from "./string";
 import ValueValidators from "./value";
 
-const validators: { [key: string]: <T>(value: T, args?: any) => T } = {
+export type Validators = {
+  [key: string]: <T>(value: T, args?: any) => boolean | Promise<boolean>;
+};
+
+const validators: Validators = {
   ...DateValidators,
   ...BooleanValidators,
   ...StringValidators,

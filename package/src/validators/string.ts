@@ -226,38 +226,34 @@ export default {
   // ISO 8601 (dates, times, durations)
   // ---------------------------------------------------------------------------
 
-  iso: {
-    /**
-     * ISO date (YYYY-MM-DD).
-     */
-    date(value: string): boolean {
-      return /^\d{4}-\d{2}-\d{2}$/.test(value);
-    },
+  /**
+   * ISO date (YYYY-MM-DD).
+   */
+  isoDate(value: string): boolean {
+    return /^\d{4}-\d{2}-\d{2}$/.test(value);
+  },
 
-    /**
-     * ISO time (HH:mm:ss(.sss)?).
-     */
-    time(value: string): boolean {
-      return /^\d{2}:\d{2}:\d{2}(?:\.\d+)?$/.test(value);
-    },
+  /**
+   * ISO time (HH:mm:ss(.sss)?).
+   */
+  isoTime(value: string): boolean {
+    return /^\d{2}:\d{2}:\d{2}(?:\.\d+)?$/.test(value);
+  },
 
-    /**
-     * ISO datetime with Z or offset.
-     */
-    datetime(value: string): boolean {
-      return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(Z|[+-]\d{2}:\d{2})$/.test(
-        value
-      );
-    },
+  /**
+   * ISO datetime with Z or offset.
+   */
+  isoDatetime(value: string): boolean {
+    return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(Z|[+-]\d{2}:\d{2})$/.test(
+      value
+    );
+  },
 
-    /**
-     * ISO 8601 duration (PnYnMnDTnHnMnS).
-     */
-    duration(value: string): boolean {
-      return /^P(?!$)(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/.test(
-        value
-      );
-    },
+  /**
+   * ISO 8601 duration (PnYnMnDTnHnMnS).
+   */
+  isoDuration(value: string): boolean {
+    return /^P(?!$)(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/.test(value);
   },
 
   /**
@@ -307,5 +303,20 @@ export default {
    */
   endsWith(value: unknown, suffix: string): boolean {
     return typeof value === "string" && value.endsWith(suffix);
+  },
+
+  toLowerCase(value: string) {
+    return value.toLowerCase();
+  },
+
+  toUpperCase(value: string) {
+    return value.toUpperCase();
+  },
+
+  normalize(
+    value: string,
+    form: "NFC" | "NFD" | "NFKC" | "NFKD" | (string & {}) = "NFC"
+  ) {
+    return value.normalize(form);
   },
 };
