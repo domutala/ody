@@ -1,6 +1,6 @@
-import * as ody from ".";
+import * as o from ".";
 
-const name = ody.string().min(2).max(16).array().optional();
+const name = o.hostname().min(2).max(16).array().optional();
 
 name
   .parse(["ert.com"])
@@ -11,5 +11,16 @@ name
     console.log("error", error);
   });
 
-type Reseult = ody.InferOutput<typeof name>;
-type In = ody.InferInput<typeof name>;
+type Reseult = o.InferOutput<typeof name>;
+
+const enumarable = o.enum([145, "hello"]).optional().array().default(["hello"]);
+enumarable
+  .parse(["hello"])
+  .then((v) => {
+    console.log(v);
+  })
+  .catch((error) => {
+    console.log("error", error);
+  });
+
+type In = o.InferOutput<typeof enumarable>;

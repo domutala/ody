@@ -24,32 +24,3 @@ export { stringSchema as string } from "./string";
 export { ulidSchema as ulid } from "./ulid";
 export { urlSchema as url } from "./url";
 export { uuidSchema as uuid } from "./uuid";
-
-// export default {
-//   string: stringSchema,
-//   email: emailSchema,
-//   url: urlSchema,
-//   regex: regexSchema,
-//   uuid: uuidSchema,
-//   hostname: hostnameSchema,
-//   jwt: jwtSchema,
-//   nanoid: nanoidSchema,
-//   cuid: cuidSchema,
-//   cuid2: cuid2Schema,
-//   ulid: ulidSchema,
-//   httpUrl: httpUrlSchema,
-//   ipv4: ipv4Schema,
-//   ipv6: ipv6Schema,
-//   mac: macSchema,
-//   cidrv4: cidrv4Schema,
-//   cidrv6: cidrv6Schema,
-//   base64: base64Schema,
-//   base64url: base64urlSchema,
-//   hex: hexSchema,
-//   hash: hashSchema,
-//   emoji: emojiSchema,
-//   isoDate: isoDateSchema,
-//   isoTime: isoTimeSchema,
-//   isoDatetime: isoDatetimeSchema,
-//   isoDuration: isoDurationSchema,
-// };
