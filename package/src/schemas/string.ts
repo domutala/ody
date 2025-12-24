@@ -225,7 +225,11 @@ export class StringSchema extends BaseSchema<string> implements _StringSchema {
   }
 
   trim() {
-    this._output.push({ schema: "trim", type: "transformer", params: {} });
+    this._output.push({
+      schema: "trim",
+      type: "transformer",
+      params: {},
+    });
     return this;
   }
 

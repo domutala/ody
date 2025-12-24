@@ -25,6 +25,10 @@ export default {
     return typeof value === "string" && value.trim().length === 0;
   },
 
+  trim(value: string): string {
+    return value.trim();
+  },
+
   // ---------------------------------------------------------------------------
   // Email / Identifiers / Tokens
   // ---------------------------------------------------------------------------

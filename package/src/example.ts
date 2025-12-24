@@ -6,16 +6,18 @@ export const $ody = {
 
 const name = $ody
   .string()
-  .min(5)
-  .max(50)
   .array()
+  .trim()
   .transform((value) => {
     return value + "ZZZ";
   })
+  .min(5)
+  .max(50)
+
   .regex(/^[a-zA-Z]+$/, "regex not match");
 
 name
-  .parse(["dfsdfsdf"])
+  .parse(["  dfsdfsdf    "])
   .then((value) => {
     console.log(value);
   })

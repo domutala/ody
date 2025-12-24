@@ -1,20 +1,19 @@
 import validators from "src/validators";
 
+type SchemaOutputBase = {
+  schema: string;
+  fn?: <T>(value: T, args?: any) => T | Promise<T>;
+};
+
 /**
  * Represents a single rule in the validation/transformation pipeline.
  * Can be a validator (checks value) or transformer (modifies value).
  */
-export type SchemaOutput =
-  | {
-      schema: string;
-      type: "validator";
-      params: { args?: any; error?: string };
-    }
-  | {
-      schema: string;
-      type: "transformer";
-      params: { args?: any };
-    };
+export type SchemaOutput = SchemaOutputBase &
+  (
+    | { type: "validator"; params: { args?: any; error?: string } }
+    | { type: "transformer"; params: { args?: any } }
+  );
 
 /**
  * Base interface for all schemas.
@@ -28,6 +27,7 @@ export interface _Basechema<T> {
   nullable(): this;
   nullish(): this;
   array(): this;
+  transform(fn: (value: T) => T): this;
 }
 
 /**
@@ -83,6 +83,9 @@ export class BaseSchema<T = any> implements _Basechema<T> {
     this._output.push({
       schema: "transformer",
       type: "transformer",
+      async fn(value, fn: (value: any) => any | Promise<any>) {
+        return await fn(value);
+      },
       params: { args: fn },
     });
 
@@ -110,7 +113,9 @@ export class BaseSchema<T = any> implements _Basechema<T> {
       let value = values[i];
 
       for (const schema of this._output) {
-        if (schema.type === "validator") {
+        if (schema.fn) {
+          value = await schema.fn(value, schema.params.args);
+        } else if (schema.type === "validator") {
           let isValid = validators[schema.schema](value, schema.params.args);
           let accept = isValid;
 
