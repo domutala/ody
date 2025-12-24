@@ -22,12 +22,12 @@ export type SchemaOutput = SchemaOutputBase &
 export interface _Basechema<T> {
   parse(value: any): Promise<T>;
   safeParse(value: any): Promise<{ error?: string; value: T }>;
-  default(value: any): this;
-  optional(): this;
-  nullable(): this;
-  nullish(): this;
-  array(): this;
-  transform(fn: (value: T) => T): this;
+  default(value: T): BaseSchema<T>;
+  optional(): BaseSchema<T | undefined>;
+  nullable(): BaseSchema<T | null>;
+  nullish(): BaseSchema<T | undefined | null>;
+  array(): BaseSchema<T[]>;
+  transform<U>(fn: (value: T) => U): BaseSchema<U>;
 }
 
 /**
@@ -38,8 +38,8 @@ export class BaseSchema<T = any> implements _Basechema<T> {
   private _optional?: boolean;
   private _nullable?: boolean;
   private _nullish?: boolean;
-  private _array: boolean;
-  private _default: T;
+  private _array: boolean = false;
+  private _default?: T = undefined;
 
   private _name: string;
   _output: SchemaOutput[];
@@ -50,36 +50,36 @@ export class BaseSchema<T = any> implements _Basechema<T> {
   }
 
   /** Marks value as optional. */
-  optional() {
+  optional(): BaseSchema<T | undefined> {
     this._optional = true;
-    return this;
+    return this as unknown as BaseSchema<T | undefined>;
   }
 
   /** Sets a default value. */
-  default(value: any) {
+  default(value: T): BaseSchema<T> {
     this._default = value;
-    return this;
+    return this as unknown as BaseSchema<T>;
   }
 
   /** Allows null values. */
-  nullable() {
+  nullable(): BaseSchema<T | null> {
     this._nullable = true;
-    return this;
+    return this as unknown as BaseSchema<T | null>;
   }
 
   /** Allows null or undefined values. */
-  nullish() {
+  nullish(): BaseSchema<T | undefined | null> {
     this._nullish = true;
-    return this;
+    return this as unknown as BaseSchema<T | undefined | null>;
   }
 
   /** Marks value as an array of T. */
-  array() {
+  array(): BaseSchema<T[]> {
     this._array = true;
-    return this;
+    return this as unknown as BaseSchema<T[]>;
   }
 
-  transform(fn: (value: T) => T) {
+  transform<U>(fn: (value: T) => U): BaseSchema<U> {
     this._output.push({
       schema: "transformer",
       type: "transformer",
@@ -89,14 +89,14 @@ export class BaseSchema<T = any> implements _Basechema<T> {
       params: { args: fn },
     });
 
-    return this;
+    return this as unknown as BaseSchema<U>;
   }
 
   /**
    * Validates and transforms a value according to the pipeline.
    * Throws on validation errors.
    */
-  async parse(value?: any) {
+  async parse(value?: unknown): Promise<T> {
     if (typeof value === "undefined") value = this._default;
 
     if (this._nullish) {
@@ -144,18 +144,18 @@ export class BaseSchema<T = any> implements _Basechema<T> {
       values[i] = value;
     }
 
-    return value;
+    return (this._array ? values : values[0]) as T;
   }
 
   /**
    * Validates a value and returns result object.
    * Does not throw on error.
    */
-  async safeParse(value?: any) {
+  async safeParse(value?: unknown): Promise<{ error?: string; value: T }> {
     try {
       return { value: await this.parse(value) };
     } catch (error) {
-      return { error, value };
+      return { error: error as string, value: value as T };
     }
   }
 }
